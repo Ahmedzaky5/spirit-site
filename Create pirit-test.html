@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>اختبر قدراتك الروحانية</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      direction: rtl; /* Set RTL direction for overall page */
+    }
+    .hidden { display: none; }
+    .fade { animation: fadeIn 1.5s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    .container {
+      padding: 20px;
+    }
+    .button {
+      background-color: #8a2be2; /* Purple from your latest design */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #5e1ca3; /* Darker purple on hover */
+    }
+    .progress-container {
+      width: 80%;
+      margin: 20px auto;
+      height: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      direction: ltr; /* Override RTL for progress bar fill direction */
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #8a2be2; /* Purple fill */
+      width: 0%;
+      transition: width 0.5s;
+    }
+    .whatsapp-fixed {
+      position: fixed;
+      bottom: 20px;
+      right: 20px; /* Kept right as in your latest code */
+      background-color: #25d366;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      text-decoration: none; /* Ensure no underline */
+      cursor: pointer; /* Add cursor pointer for consistency with button */
+    }
+    .whatsapp-fixed img {
+      width: 35px;
+      height: 35px;
+    }
+    /* Style for the new logo button */
+    #logo-button {
+      background-color: rgba(255,255,255,0.08); /* Slightly transparent background */
+      color: #8a2be2; /* Your chosen purple color */
+      font-size: 28px; /* Increased font size for prominence */
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 20px; /* Space it out from other elements */
+      display: inline-block; /* Allows centering with text-align: center on parent */
+    }
+    #logo-button:hover {
+        background-color: rgba(255,255,255,0.15); /* More visible on hover */
+    }
+
+    #lightning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%), rgba(255,255,255,0.1);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      animation: flash 5s infinite;
+    }
+    @keyframes flash {
+      0%, 97%, 100% { opacity: 0; }
+      98% { opacity: 0.4; }
+      99% { opacity: 0; }
+    }
+    
+    .result-message {
+      font-size: 1.2em;
+      background-color: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px auto;
+      max-width: 600px;
+      white-space: pre-wrap;
+      text-align: right;
+      direction: rtl;
+    }
+    #questionText {
+        text-align: right;
+    }
+    #choices {
+        direction: rtl;
+    }
+  </style>
+</head>
+<body>
+  <div id="lightning"></div>
+  <audio id="bgMusic" loop>
+    <source src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="endMusic">
+    <source src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Mr_Loop_-_Acoustic_Funk.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div class="container fade" id="setup">
+    <div id="logo-button" onclick="openSpiritualContact('logo')">اح👁️مد</div>
+    <h1>اختبر قدراتك الروحانية</h1>
+    <p>اختر وضع الاختبار</p>
+    <button class="button" onclick="selectMode('solo')">فردي</button>
+    <button class="button" onclick="selectMode('group')">جماعي</button>
+  </div>
+
+  <div class="container hidden" id="testType">
+    <h2>اختر نوع الاختبار</h2>
+    <button class="button" onclick="startTest('short')">اختبار قصير (10 أسئلة)</button>
+    <button class="button" onclick="startTest('deep')">اختبار عميق (28 سؤال)</button>
+  </div>
+
+  <div class="container hidden" id="quiz">
+    <div id="questionText"></div>
+    <div id="choices">
+      </div>
+    <br>
+    <button class="button" id="backButton" onclick="goBack()">رجوع</button>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <div class="container hidden" id="result">
+    <h2>نتيجتك</h2>
+    <div id="resultText" class="result-message"></div>
+    <button class="button" onclick="restartTest()">إعادة الاختبار</button>
+    <br>
+    <button class="button" onclick="shareResult()">شارك نتيجتك</button>
+  </div>
+
+  <div class="whatsapp-fixed" onclick="openSpiritualContact('floating')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" alt="WhatsApp Icon" />
+  </div>
+
+  <script>
+    const questionsData = {
+      short: [
+        { q: "هل تشعر أحيانًا بأحداث قبل أن تحدث؟", type: "vision" },
+        { q: "هل تنجذب للأماكن القديمة والمهجورة؟", type: "energy" },
+        { q: "هل ترى رموزًا أو ألوانًا أثناء التأمل؟", type: "aura" },
+        { q: "هل تشعر بطاقة الناس من دون أن يتكلموا؟", type: "sensing" },
+        { q: "هل تراودك أحلام تتحقق لاحقًا؟", type: "vision" },
+        { q: "هل تشعر بالتعب عند التواجد في أماكن مزدحمة؟", type: "sensing" },
+        { q: "هل تنجذب لفكرة الأرواح والكائنات الخفية؟", type: "energy" },
+        { q: "هل يلفت انتباهك تكرار أرقام معينة في حياتك؟", type: "intuition" },
+        { q: "هل تشعر أنك مختلف منذ الطفولة؟", type: "identity" },
+        { q: "هل تجد راحة غريبة في العزلة والتأمل؟", type: "aura" },
+      ],
+      deep: [
+        { q: "هل تشعر بطاقة الأشياء القديمة بمجرد لمسها؟", type: "sensing" },
+        { q: "هل لديك فضول غريب تجاه الموت وما بعده؟", type: "energy" },
+        { q: "هل تشعر أن لك ارتباط بكائن غير مرئي يحميك؟", type: "vision" },
+        { q: "هل ترى أحيانًا وميض أو ظل يمر بجانبك؟", type: "vision" },
+        { q: "هل تصدق أنك عشت حياة سابقة؟", type: "karma" },
+        { q: "هل تلاحظ أن الحيوانات ترتاح لوجودك؟", type: "aura" },
+        { q: "هل تقرأ أفكار الآخرين بسهولة؟", type: "sensing" },
+        { q: "هل تنجذب للون معين وتحس أنه يعبر عنك؟", type: "colors" },
+        { q: "هل ترى الأحلام بألوان واضحة وغريبة؟", type: "vision" },
+        { q: "هل تسافر بخيالك لمكان غير واقعي وتعود؟", type: "projection" },
+        { q: "هل تشعر أنك منجذب للغابات والمياه أكثر من المدن؟", type: "nature" },
+        { q: "هل تفضل الوحدة على التجمعات الكبيرة؟", type: "personality" },
+        { q: "هل تتحسس من الأصوات أو الروائح أكثر من الطبيعي؟", type: "sensing" },
+        { q: "هل تعتقد أن روحك قوية بشكل غير مفهوم؟", type: "identity" },
+        { q: "هل تشعر برغبة في شفاء الآخرين؟", type: "healing" },
+        { q: "هل ترى ألوان حول الأشخاص أحيانًا؟", type: "aura" },
+        { q: "هل تجد أن لديك تأثير على الأجهزة الكهربائية؟", type: "energy" },
+        { q: "هل يلفت انتباهك اسم معين يظهر مرارًا؟", type: "signs" },
+        { q: "هل تعاني من أرق ليلي متكرر بلا سبب؟", type: "energy" },
+        { q: "هل تميل لتصديق الأحلام أكثر من الواقع أحيانًا؟", type: "intuition" },
+        { q: "هل تهرب من الواقع أحيانًا بخيالك؟", type: "projection" },
+        { q: "هل لديك انجذاب غير مبرر لأشخاص معينين؟", type: "soulmate" },
+        { q: "هل لديك حدس قوي يجعلك تتوقع نوايا الآخرين؟", type: "intuition" },
+        { q: "هل تحس أنك تتلقى رسائل من الكون؟", type: "signs" },
+        { q: "هل تشعر أنك أقرب لليل أكثر من النهار؟", type: "personality" },
+        { q: "هل تُصاب بقشعريرة بدون سبب؟", type: "energy" },
+        { q: "هل ترتاح لأماكن لم تزُرها من قبل؟", type: "karma" },
+        { q: "هل تشعر بوجود شيء يرافقك دائمًا؟", type: "vision" },
+        { q: "هل ترى أن النساء أكثر اتصالاً بالروحانيات؟", type: "gender" },
+      ]
+    };
+
+    let mode = "solo";
+    let testType = "short";
+    let currentQuestion = 0;
+    let answers = {};
+    let questions = [];
+    let questionsHistory = [];
+    let finalResultMessage = "";
+    const yourPhoneNumber = "201284246235";
+
+    function playAudio(audio) {
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(e => console.error("Audio play failed:", e));
+        }
+    }
+
+    const bgMusic = document.getElementById("bgMusic");
+    const endMusic = document.getElementById("endMusic");
+    const clickSound = new Audio("https://www.soundjay.com/button/sounds/button-16.mp3");
+
+    const setupContainer = document.getElementById('setup');
+    const testTypeContainer = document.getElementById('testType');
+    const quizContainer = document.getElementById('quiz');
+    const resultContainer = document.getElementById('result');
+
+    function showContainer(container) {
+        [setupContainer, testTypeContainer, quizContainer, resultContainer].forEach(c => {
+            c.classList.add('hidden');
+            c.classList.remove('fade');
+        });
+        container.classList.remove('hidden');
+        container.classList.add('fade');
+    }
+
+    document.addEventListener('click', () => {
+        if (bgMusic.paused) {
+            playAudio(bgMusic);
+        }
+    }, { once: true });
+
+    function selectMode(selectedMode) {
+      playAudio(clickSound);
+      mode = selectedMode;
+      showContainer(testTypeContainer);
+    }
+
+    function startTest(type) {
+      playAudio(clickSound);
+      testType = type;
+      questions = questionsData[type];
+      currentQuestion = 0;
+      answers = {};
+      questionsHistory = [];
+      showContainer(quizContainer);
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("questionText").textContent = q.q;
+      const choicesDiv = document.getElementById("choices");
+      choicesDiv.innerHTML = "";
+      [
+        { text: "نعم تماماً", value: 2 },
+        { text: "أحيانًا", value: 1 },
+        { text: "نادراً", value: 0 }
+      ].forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice.text;
+        btn.className = "button fade";
+        btn.onclick = () => answerQuestion(choice.value);
+        choicesDiv.appendChild(btn);
+      });
+      updateProgressBar();
+    }
+
+    function answerQuestion(val) {
+      playAudio(clickSound);
+      const q = questions[currentQuestion];
+      answers[q.type] = (answers[q.type] || 0) + val;
+      questionsHistory.push({ question: q, value: val });
+      currentQuestion++;
+      if (currentQuestion < questions.length) showQuestion();
+      else showResult();
+    }
+
+    function updateProgressBar() {
+      const progress = (currentQuestion / questions.length) * 100;
+      document.getElementById("progressBar").style.width = progress + "%";
+    }
+
+    function goBack() {
+        playAudio(clickSound);
+        if (currentQuestion > 0 && questionsHistory.length > 0) {
+            currentQuestion--;
+            const lastAnswerData = questionsHistory.pop();
+            const type = lastAnswerData.question.type;
+            const value = lastAnswerData.value;
+
+            answers[type] -= value;
+
+            showQuestion();
+        } else if (currentQuestion === 0 && questionsHistory.length === 0) {
+            showContainer(testTypeContainer);
+            bgMusic.play();
+        }
+    }
+
+    function showResult() {
+      playAudio(endMusic);
+      bgMusic.pause();
+      showContainer(resultContainer);
+
+      let totalScore = 0;
+      let traitsAnalysis = "";
+
+      for (const type in answers) {
+        totalScore += answers[type];
+
+        const typeQuestions = questions.filter(q => q.type === type);
+        const maxScoreForType = typeQuestions.length * 2;
+        let percentage = 0;
+        if (maxScoreForType > 0) {
+            percentage = Math.round((answers[type] / maxScoreForType) * 100);
+        }
+        traitsAnalysis += `${translateType(type)}: ${percentage}% (${answers[type]} نقطة)\n`;
+      }
+
+      let overallMessage;
+      const maxOverallScore = questions.length * 2;
+      const overallPercentage = (totalScore / maxOverallScore) * 100;
+
+      if (overallPercentage >= 70) {
+        overallMessage = "⚡ لديك ميول روحانية قوية جداً!";
+      } else if (overallPercentage >= 40) {
+        overallMessage = "🌟 روحانياتك في تطور ملحوظ، استمر!";
+      } else {
+        overallMessage = "🌙 روحانياتك في بدايتها، لكنها موجودة ويمكن تطويرها.";
+      }
+
+      finalResultMessage = `🌌 تحليل قدراتك:\n\n${traitsAnalysis}\n${overallMessage}\n\nلو عاوز تطور وتزود قدراتك، تواصل معانا 👇`;
+
+      document.getElementById("resultText").textContent = finalResultMessage;
+    }
+
+    function translateType(type) {
+        const translations = {
+            vision: "الرؤية والبصيرة",
+            energy: "الإحساس بالطاقة",
+            aura: "الهالة والذبذبات",
+            sensing: "الاستشعار والحدس",
+            intuition: "الحدس القوي",
+            identity: "فهم الذات",
+            karma: "الكارما والأقدار",
+            colors: "لغة الألوان",
+            projection: "الإسقاط الأثيري",
+            nature: "التناغم مع الطبيعة",
+            personality: "السمات الشخصية الروحانية",
+            healing: "القدرة على الشفاء",
+            signs: "قراءة الإشارات الكونية",
+            soulmate: "توأم الروح والاتصال العميق",
+            gender: "الطاقة الأنثوية/الذكرية الروحانية"
+        };
+        return translations[type] || type;
+    }
+
+    function shareResult() {
+      playAudio(clickSound);
+      const shareText = encodeURIComponent(`نتيجتي في اختبار القدرات الروحانية:\n${finalResultMessage}\n\nجرب أنت كمان واكتشف قدراتك!`);
+      // Use wa.me for general sharing
+      window.open(`https://wa.me/?text=${shareText}`, '_blank');
+    }
+
+    // Updated function for spiritual contact (used by both logo button and floating WhatsApp button)
+    function openSpiritualContact(buttonType) {
+        playAudio(clickSound);
+        let contactMessage = "";
+
+        // Customize message based on which button was clicked, if needed
+        if (buttonType === 'logo') {
+            contactMessage = encodeURIComponent(
+                `أهلاً بك في عالم الروحانيات مع أح👁️مد!\n\n` +
+                `لو كنت تبحث عن:\n` +
+                `- تقوية قدراتك الروحانية\n` +
+                `- فهم أعمق لذاتك وطاقتك\n` +
+                `- إجابات لأسئلتك الروحية\n` +
+                `تواصل معي الآن وسأكون دليلك في هذه الرحلة.`
+            );
+        } else if (buttonType === 'floating') {
+            // For the floating button, a simpler direct contact message
+            contactMessage = encodeURIComponent(
+                `مرحباً أحمد، أود التواصل معك بخصوص القدرات الروحانية.`
+            );
+        }
+        
+        const whatsappURL = `https://wa.me/${yourPhoneNumber}?text=${contactMessage}`;
+
+        // Check if on a mobile device to try opening the app directly
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            // Try to open WhatsApp app directly
+            window.location.href = whatsappURL;
+        } else {
+            // Fallback for desktop (opens WhatsApp Web)
+            window.open(whatsappURL, '_blank');
+        }
+    }
+
+    function restartTest() {
+        playAudio(clickSound);
+        currentQuestion = 0;
+        answers = {};
+        questionsHistory = [];
+        document.getElementById("progressBar").style.width = "0%";
+        showContainer(setupContainer);
+        playAudio(bgMusic);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        showContainer(setupContainer);
+    });
+  </script>
+</body>
+</html>
