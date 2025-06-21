@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>اختبر قدراتك الروحانية</title>
+  <meta name="google-site-verification" content="8lSLfxt7Vl339lE_F8jwWNHZnYjJU5JQVf4xG--XZFU" />
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      direction: rtl;
+    }
+    .hidden { display: none; }
+    .fade { animation: fadeIn 1.5s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    .container {
+      padding: 20px;
+    }
+    .button {
+      background-color: #8a2be2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #5e1ca3;
+    }
+    .progress-container {
+      width: 80%;
+      margin: 20px auto;
+      height: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      direction: ltr;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #8a2be2;
+      width: 0%;
+      transition: width 0.5s;
+    }
+    .whatsapp-fixed {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .whatsapp-fixed img {
+      width: 35px;
+      height: 35px;
+    }
+    #logo-button {
+      background-color: rgba(255,255,255,0.08);
+      color: #8a2be2;
+      font-size: 28px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+    #logo-button:hover {
+      background-color: rgba(255,255,255,0.15);
+    }
+    #lightning {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%), rgba(255,255,255,0.1);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      animation: flash 5s infinite;
+    }
+    @keyframes flash {
+      0%, 97%, 100% { opacity: 0; }
+      98% { opacity: 0.4; }
+      99% { opacity: 0; }
+    }
+    .result-message {
+      font-size: 1.2em;
+      background-color: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px auto;
+      max-width: 600px;
+      white-space: pre-wrap;
+      text-align: right;
+      direction: rtl;
+    }
+    #questionText { text-align: right; }
+    #choices { direction: rtl; }
+  </style>
+</head>
+<body>
+  <div id="lightning"></div>
+  <audio id="bgMusic" loop>
+    <source src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="endMusic">
+    <source src="https://www.learningcontainer.com/wp-content/uploads/2020/02/Mr_Loop_-_Acoustic_Funk.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div class="container fade" id="setup">
+    <div id="logo-button" onclick="openSpiritualContact('logo')">اح👁️مد</div>
+    <h1>اختبر قدراتك الروحانية</h1>
+    <p>اختر وضع الاختبار</p>
+    <button class="button" onclick="selectMode('solo')">فردي</button>
+    <button class="button" onclick="selectMode('group')">جماعي</button>
+  </div>
+
+  <div class="container hidden" id="testType">
+    <h2>اختر نوع الاختبار</h2>
+    <button class="button" onclick="startTest('short')">اختبار قصير (10 أسئلة)</button>
+    <button class="button" onclick="startTest('deep')">اختبار عميق (28 سؤال)</button>
+  </div>
+
+  <div class="container hidden" id="quiz">
+    <div id="questionText"></div>
+    <div id="choices"></div>
+    <br>
+    <button class="button" id="backButton" onclick="goBack()">رجوع</button>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+  </div>
+
+  <div class="container hidden" id="result">
+    <h2>نتيجتك</h2>
+    <div id="resultText" class="result-message"></div>
+    <button class="button" onclick="restartTest()">إعادة الاختبار</button>
+    <br>
+    <button class="button" onclick="shareResult()">شارك نتيجتك</button>
+  </div>
+
+  <div class="whatsapp-fixed" onclick="openSpiritualContact('floating')">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" alt="WhatsApp Icon" />
+  </div>
+
+  <script>
+    // الكود البرمجي الكامل زي ما كان قبل كده، لو حابب أرسله كامل كمان أقوله فقط
+  </script>
+</body>
+</html>
